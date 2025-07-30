@@ -1,0 +1,92 @@
+{% extends 'boutique/base.html' %}
+{% load humanize %}
+
+{% block title %}{{ produit.nom }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{{ produit.photo.url }}" class="d-block w-100" alt="{{ produit.nom }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h1 class="mb-3">{{ produit.nom }}</h1>
+        <div class="d-flex align-items-center mb-4">
+            <div class="rating-stars">
+                {% with ''|center:produit.note_moyenne as range %}
+                {% for _ in range %}
+                <i class="fas fa-star text-warning"></i>
+                {% endfor %}
+                {% endwith %}
+            </div>
+            <span class="ms-2">({{ produit.avis.count }} avis)</span>
+        </div>
+        <h3 class="text-primary mb-4">{{ produit.prix|floatformat:2|intcomma }} Fcfa</h3>
+        <p class="lead">{{ produit.description }}</p>
+        
+        {% if produit.stock > 0 %}
+        <form method="post" action="{% url 'boutique:ajouter_panier' produit.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-cart-plus"></i> Ajouter au panier
+            </button>
+        </form>
+        {% else %}
+        <div class="alert alert-warning">Produit en rupture de stock</div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Section Avis -->
+<div class="mt-5">
+    <h3>Les avis clients</h3>
+    {% if form %}
+    <button class="btn btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#avisModal">
+        <i class="fas fa-pen"></i> Laisser un avis
+    </button>
+    {% endif %}
+    
+    {% for avis in avis %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5>{{ avis.client.username }}</h5>
+                <div class="text-warning">
+                    {% for _ in ''|ljust:avis.note %}
+                    <i class="fas fa-star"></i>
+                    {% endfor %}
+                </div>
+            </div>
+            <p class="text-muted">{{ avis.date|date:"d/m/Y" }}</p>
+            <p>{{ avis.commentaire }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal Avis -->
+<div class="modal fade" id="avisModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'boutique:laisser_avis' produit.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Votre avis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

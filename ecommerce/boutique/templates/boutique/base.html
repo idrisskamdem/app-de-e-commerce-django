@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BamiShop{% endblock %}</title>
+    <link href="{% static 'boutique/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'boutique/css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Image de fond spécifique à base.html */
+        body.base-page {
+            
+            background-image: url("{% static 'boutique/images/hom.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color:aliceblue;
+        }
+
+        /* Styliser le nom de la boutique pour qu'il soit très visible et centré */
+        .bami-shop-name {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            color: blue;  /* Changer la couleur en rouge */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Lien navbar en gras */
+        .navbar-nav .nav-item .nav-link {
+            font-weight: bold;
+        }
+
+        /* Lien Accueil personnalisé */
+        .navbar-nav .nav-item .nav-link.accueil-link {
+            font-weight: bolder; /* Plus gras */
+            color: #28a745;  /* Couleur verte */
+            border: 2px solid #28a745; /* Bordure verte */
+            border-radius: 30px;  /* Bord arrondi */
+            padding: 8px 20px;  /* Espacement pour rendre plus visible */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Transition pour l'effet de survol */
+        }
+
+        /* Effet au survol pour le lien Accueil */
+        .navbar-nav .nav-item .nav-link.accueil-link:hover {
+            background-color: #28a745;
+            color:white;
+        }
+
+        .footer-icons a {
+            margin: 0 20px;  /* Plus d'espace entre les icônes */
+            font-size: 2rem;
+            color: white;
+        }
+
+        /* Ajouter les couleurs originales des logos */
+        .fab.fa-facebook {
+            color: #1877f2;  /* Couleur Facebook */
+        }
+
+        .fab.fa-whatsapp {
+            color: #25d366;  /* Couleur WhatsApp */
+        }
+
+        .navbar-nav .nav-item {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100 {% if request.path == '/' %}base-page{% endif %}">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'boutique:liste_produits' %}">
+                <img src="{% static 'boutique/images/logo.png' %}" alt="Logo" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link accueil-link" href="{% url 'boutique:home' %}">Accueil</a> <!-- Lien vers la page d'accueil -->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'boutique:liste_produits' %}">Catalogue</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'boutique:about_us' %}">À propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'boutique:contact_us' %}">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">Administration</a> <!-- Lien vers l'admin -->
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="{% url 'boutique:gestion_panier' %}" class="btn btn-outline-light position-relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        {% if request.user.is_authenticated %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ panier_count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Nom de la boutique -->
+    {% if request.path == '/' %}
+    <div class="bami-shop-name">
+        <i>BamiShop</i> -Votre boutique en ligne
+    </div>
+    {% endif %}
+
+    <!-- Contenu principal -->
+    <main class="flex-grow-1 my-4">
+        <div class="container">
+            {% include 'boutique/partials/messages.html' %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-auto">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Notre Boutique</h5>
+                    <p class="mb-0">Votre destination préférée pour des achats en ligne sécurisés</p>
+                </div>
+                <div class="col-md-6 text-end footer-icons">
+                    <h5>Suivez-nous</h5>
+                    <a href="https://facebook.com" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://wa.me/651829821" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'boutique/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'boutique/js/main.js' %}"></script>
+</body>
+</html>

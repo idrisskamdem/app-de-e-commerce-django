@@ -1,0 +1,63 @@
+{% extends 'boutique/base.html' %}
+{% load humanize %}
+
+{% block title %}Votre Panier{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-shopping-cart"></i> Votre Panier</h4>
+            </div>
+            <div class="card-body">
+                {% for ligne in panier.lignepanier_set.all %}
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-2">
+                        <img src="{{ ligne.produit.photo.url }}" class="img-fluid rounded-3" alt="{{ ligne.produit.nom }}">
+                    </div>
+                    <div class="col-md-4">
+                        <h5>{{ ligne.produit.nom }}</h5>
+                        <p class="text-muted mb-0">{{ ligne.produit.prix|floatformat:2|intcomma }} €</p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center">
+                            <form method="post" action="{% url 'boutique:retirer_panier' ligne.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <h5 class="text-muted">Votre panier est vide</h5>
+                    <a href="{% url 'boutique:liste_produits' %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-arrow-left"></i> Continuer mes achats
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mt-4 mt-lg-0">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Récapitulatif</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Total articles :</span>
+                    <span>{{ total|floatformat:2|intcomma }} €</span>
+                </div>
+                <a href="{% url 'boutique:passer_commande' %}" class="btn btn-success w-100">
+                    <i class="fas fa-lock"></i> Passer la commande
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

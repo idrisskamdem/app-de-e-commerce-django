@@ -1,0 +1,72 @@
+{% extends 'boutique/base.html' %}
+
+{% block title %}Nous Contacter{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row g-5">
+        <!-- Formulaire de Contact -->
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <h2 class="text-primary mb-4"><i class="fas fa-envelope me-2"></i>Contactez-Nous</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Votre Nom</label>
+                            <input type="text" placeholder="nom....." class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Votre Email</label>
+                            <input type="email" placeholder="email...." class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" rows="5" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Envoyer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Infos de Contact -->
+        <div class="col-lg-5">
+            <div class="sticky-top" style="top: 100px;">
+                <div class="card border-0 bg-light">
+                    <div class="card-body p-4">
+                        <h3 class="text-primary mb-4"><i class="fas fa-map-marked-alt me-2"></i>Où Nous Trouver ?</h3>
+                        
+                        <div class="mb-4">
+                            <h5>Heures d'Ouverture</h5>
+                            <p class="mb-0">Lun-Ven : 08h - 18h</p>
+                            <p>Sam : 09h - 13h</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>Téléphone</h5>
+                            <p class="mb-0">
+                                <i class="fas fa-phone me-2"></i>+237 651 829 821
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>Email</h5>
+                            <p class="mb-0">
+                                <i class="fas fa-envelope me-2"></i>recruitpro@gamil.com
+                            </p>
+                        </div>
+
+                        <div class="map-container ratio ratio-16x9 rounded-3 overflow-hidden">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1kZ4wYl5X7Zq3qXqXqXqXqXqXqXq" 
+                                class="border-0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

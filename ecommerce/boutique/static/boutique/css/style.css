@@ -1,0 +1,144 @@
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --light: #ecf0f1;
+}
+
+body {
+    background-color: #667085;/*#f8f9fa;*/
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.product-image {
+    height: 300px;
+    object-fit: contain;
+    padding: 20px;
+}
+
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.rating-stars {
+    font-size: 1.2rem;
+}
+
+.navbar-brand img {
+    transition: transform 0.3s;
+}
+
+.navbar-brand:hover img {
+    transform: rotate(-10deg);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.alert {
+    border-radius: 0.5rem;
+}
+
+.modal-content {
+    border-radius: 1rem;
+}
+
+@media (max-width: 768px) {
+    .product-image {
+        height: 200px;
+    }
+}
+.about-header {
+    background: linear-gradient(rgba(0,0,0,0.7), url('../images/about-bg.jpg') center/cover);
+}
+
+.icon-lg {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* Contact Page */
+.map-container {
+    min-height: 300px;
+    background-color: #eee;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(44, 62, 80, 0.25);
+}
+
+/* Timeline */
+.timeline {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 2rem 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #dee2e6;
+    z-index: 0;
+}
+
+.timeline-step {
+    text-align: center;
+    z-index: 1;
+    padding: 0 1rem;
+    flex: 1;
+}
+
+.timeline-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.25rem;
+    transition: transform 0.3s;
+}
+
+.timeline-step.active .timeline-icon {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 5px rgba(44, 62, 80, 0.1);
+}
+
+.timeline-step h6 {
+    color: var(--primary);
+    font-weight: 600;
+}
+.bami-shop-name {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    color: blue;  /* Changer la couleur en rouge */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

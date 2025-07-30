@@ -1,0 +1,149 @@
+{% extends 'boutique/base.html' %}
+{% load humanize %}
+
+{% block title %}Commande #{{ commande.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <!-- En-tête de la commande -->
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Commande #{{ commande.id }}</h2>
+                <span class="badge bg-{% if commande.statut == 'livre' %}success{% else %}warning{% endif %} fs-6">
+                    {{ commande.get_statut_display|upper }}
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <!-- Informations générales -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-calendar-alt me-2"></i>Date de commande</h5>
+                    <p class="lead">{{ commande.date_commande|date:"d/m/Y H:i" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5><i class="fas fa-map-marker-alt me-2"></i>Adresse de livraison</h5>
+                    <p class="lead">{{ commande.client.adresse }}</p>
+                </div>
+            </div>
+
+            <!-- Détails des articles -->
+            <h4 class="mb-4"><i class="fas fa-box-open me-2"></i>Articles commandés</h4>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Produit</th>
+                            <th class="text-end">Prix unitaire</th>
+                            <th class="text-center">Quantité</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ligne in commande.lignecommande_set.all %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ ligne.produit.photo.url }}" 
+                                         alt="{{ ligne.produit.nom }}" 
+                                         class="img-thumbnail me-3" 
+                                         style="width: 80px; height: 80px; object-fit: contain;">
+                                    {{ ligne.produit.nom }}
+                                </div>
+                            </td>
+                            <td class="text-end">{{ ligne.produit.prix|floatformat:2|intcomma }} €</td>
+                            <td class="text-center">{{ ligne.quantite }}</td>
+                            <td class="text-end">{{ ligne.sous_total|floatformat:2|intcomma }} €</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="table-group-divider">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Total général :</td>
+                            <td class="text-end fw-bold text-primary">
+                                {{ commande.total_commande|floatformat:2|intcomma }} €
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Informations de paiement -->
+            {% if commande.paiement %}
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-credit-card me-2"></i>Paiement</h5>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p class="mb-1">
+                                Méthode : {{ commande.paiement.get_methode_display }}
+                            </p>
+                            <p class="mb-1">
+                                Statut : 
+                                <span class="badge bg-{% if commande.paiement.statut == 'reussi' %}success{% else %}danger{% endif %}">
+                                    {{ commande.paiement.get_statut_display }}
+                                </span>
+                            </p>
+                            <p class="mb-0">
+                                Montant : {{ commande.paiement.montant|floatformat:2|intcomma }} €
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Suivi de commande -->
+            <div class="mt-5">
+                <h4 class="mb-4"><i class="fas fa-shipping-fast me-2"></i>Suivi de votre commande</h4>
+                <div class="timeline">
+                    <div class="timeline-step {% if commande.statut == 'en_cours' %}active{% endif %}">
+                        <div class="timeline-icon bg-primary">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h6>Commande validée</h6>
+                        <small>{{ commande.date_commande|date:"d/m/Y H:i" }}</small>
+                    </div>
+                    
+                    <div class="timeline-step {% if commande.statut == 'livre' %}active{% endif %}">
+                        <div class="timeline-icon bg-success">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h6>Expédiée</h6>
+                        <small>{% if commande.statut == 'livre' %}{{ commande.date_commande|date:"d/m/Y H:i" }}{% else %}En attente{% endif %}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer de la carte -->
+        <div class="card-footer bg-light">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="{% url 'boutique:liste_produits' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Retour à la boutique
+                    </a>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-success" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Imprimer la facture
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section d'assistance -->
+    <div class="card border-primary mt-4">
+        <div class="card-body text-center">
+            <h5 class="text-primary mb-3"><i class="fas fa-headset me-2"></i>Besoin d'aide ?</h5>
+            <p class="mb-0">
+                Contactez notre service client au <strong>+237 XXX XXX XXX</strong> ou par email à
+                <a href="mailto:support@boutique.com">support@boutique.com</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
